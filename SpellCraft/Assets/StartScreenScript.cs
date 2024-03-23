@@ -1,24 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class StartScreenScript : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
-        gameObject.SetActive(true);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if(Input.anyKey)
-        {
-            gameObject.SetActive(false);
-
-        }
-        gameObject.SetActive(true);
-
-    }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:aad633760360e8ae1cfa84018667b789da0d97f7e98af7d0ead45108f113911b
+size 467
