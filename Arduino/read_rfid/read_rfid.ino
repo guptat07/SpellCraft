@@ -88,7 +88,14 @@ void loop()
     }
 
     Serial.print(uidString);
-    Serial.print(", ");
+    if(!(i == numRFIDReaders - 1))
+    {
+      Serial.print(", ");
+    }
   }
   Serial.println();
+
+  // 0.5 second delay (can be removed, but doesn't really feel more responsive)
+  // Mostly added to mitigate sensor/wire reliability issues (misreads, etc.)
+  delay(500);
 }
