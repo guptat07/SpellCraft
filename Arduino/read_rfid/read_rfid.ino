@@ -50,6 +50,7 @@ void setup() {
 void loop()
 {
   // put your main code here, to run repeatedly:
+  Serial.print("START,");
   // Iterate through the readers in order
   for(int i = 0; i < numRFIDReaders; i++)
   {
@@ -88,11 +89,9 @@ void loop()
     }
 
     Serial.print(uidString);
-    if(!(i == numRFIDReaders - 1))
-    {
-      Serial.print(", ");
-    }
+    Serial.print(",");
   }
+  Serial.print("END");
   Serial.println();
 
   // 0.5 second delay (can be removed, but doesn't really feel more responsive)
