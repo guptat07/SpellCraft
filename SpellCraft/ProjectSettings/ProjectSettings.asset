@@ -650,6 +650,7 @@ PlayerSettings:
   metroTileBackgroundColor: {r: 0.13333334, g: 0.17254902, b: 0.21568628, a: 0}
   metroSplashScreenBackgroundColor: {r: 0.12941177, g: 0.17254902, b: 0.21568628, a: 1}
   metroSplashScreenUseBackgroundColor: 0
+  syncCapabilities: 0
   platformCapabilities: {}
   metroTargetDeviceFamilies: {}
   metroFTAName: 
@@ -704,11 +705,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 0
   windowsGamepadBackendHint: 0
-  cloudProjectId: 09cc7132-04d0-48d2-b2b4-7058d57589c4
+  cloudProjectId: c06ef4fa-d803-4b21-be71-4ee2ef211c63
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: SpellCraft
-  organizationId: unwashedpine851
+  projectName: Spellcraft Michael
+  organizationId: unity_f8bdd43233578a26b755
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}
