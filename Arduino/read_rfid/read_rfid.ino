@@ -33,6 +33,8 @@ void setup() {
   {
     mfrc522[i].PCD_Init(SDAPins[i], ResetPin);
 
+    // Bootup Debugging Info
+    /*
     Serial.print(F("Reader: "));
     Serial.print(i);
     Serial.print(F(". On pin: "));
@@ -41,7 +43,8 @@ void setup() {
     Serial.print(mfrc522[i].PCD_GetAntennaGain());
     Serial.print(F(". Version: "));
     mfrc522[i].PCD_DumpVersionToSerial();
-
+    */
+    
     delay(100);
   }
   
@@ -50,7 +53,7 @@ void setup() {
 void loop()
 {
   // put your main code here, to run repeatedly:
-  Serial.print("START,");
+  //Serial.print("START,");
   // Iterate through the readers in order
   for(int i = 0; i < numRFIDReaders; i++)
   {
@@ -89,9 +92,12 @@ void loop()
     }
 
     Serial.print(uidString);
-    Serial.print(",");
+    if (i != numRFIDReaders - 1)
+    {
+      Serial.print(",");
+    }
   }
-  Serial.print("END");
+  //Serial.print("END");
   Serial.println();
 
   // 0.5 second delay (can be removed, but doesn't really feel more responsive)
