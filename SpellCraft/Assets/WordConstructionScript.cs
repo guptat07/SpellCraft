@@ -202,7 +202,7 @@ public class WordConstructionScript : MonoBehaviour
             }
             welcomeTitle.SetActive(false);
             welcomeSubtitle.SetActive(false);
-            Debug.Log("definition" + previous);
+            // Debug.Log("definition" + previous);
         //}
 
 
