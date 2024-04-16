@@ -9,14 +9,18 @@ using UnityEngine.UI;
 
 public class WordConstructionScript : MonoBehaviour
 {
+    // Declare all variables needed to run the script. The script should be attached to a GameObject, and GameObjects will be assigned to these variables inside Unity Editor.
     public TextMeshProUGUI constructedWord;
     public TMP_InputField input;
     public GameObject welcomeTitle;
     public GameObject welcomeSubtitle;
     public TextMeshProUGUI definition;
     public GameObject image;
+    public Dictionary<string, string> RFIDToLetters = new Dictionary<string, string>();
+    public string[] receivedRFIDs;
+    public string wordFromRFID = "";
 
-
+    // These are for networking/internet API calling.
     private static readonly HttpClient client = new HttpClient();
     private static readonly HttpClient clientImage = new HttpClient();
 
@@ -29,10 +33,41 @@ public class WordConstructionScript : MonoBehaviour
     {
         definition.text = "";
         input.text = "";
+        // Activating the InputField so that user doesn't have to click on it
         input.ActivateInputField();
         //gameObject.GetComponent<CanvasRenderer>().cull = false;
+
+        // Adding all unique RFID address to the dictionary, and mapping them to their corresponding letter
+        // Kind of have to hard-code this since each ID is unique and ties to a real-world/tangible input
+        RFIDToLetters.Add("53b6e744010001", "A");
+        RFIDToLetters.Add("53ace744010001", "B");
+        RFIDToLetters.Add("53abe744010001", "C");
+        RFIDToLetters.Add("53ade744010001", "D");
+        RFIDToLetters.Add("53aee744010001", "E");
+        RFIDToLetters.Add("53a3e744010001", "F");
+        RFIDToLetters.Add("53a4e744010001", "G");
+        RFIDToLetters.Add("53a5e744010001", "H");
+        RFIDToLetters.Add("53a6e744010001", "I");
+        RFIDToLetters.Add("539be744010001", "J");
+        RFIDToLetters.Add("539ce744010001", "K");
+        RFIDToLetters.Add("539de744010001", "L");
+        RFIDToLetters.Add("539ee744010001", "M");
+        RFIDToLetters.Add("533a5846010001", "N");
+        RFIDToLetters.Add("5393e744010001", "O");
+        RFIDToLetters.Add("5394e744010001", "P");
+        RFIDToLetters.Add("5395e744010001", "Q");
+        RFIDToLetters.Add("538ee744010001", "R");
+        RFIDToLetters.Add("538de744010001", "S");
+        RFIDToLetters.Add("538ce744010001", "T");
+        RFIDToLetters.Add("538be744010001", "U");
+        RFIDToLetters.Add("537be744010001", "V");
+        RFIDToLetters.Add("5386e744010001", "W");
+        RFIDToLetters.Add("5385e744010001", "X");
+        RFIDToLetters.Add("5384e744010001", "Y");
+        RFIDToLetters.Add("5383e744010001", "Z");
     }
     
+    // Method to process return from API Calls (getting data from JSON)
     public static string getBetween(string strSource, string strStart, string strEnd)
     {
         if (strSource.Contains(strStart) && strSource.Contains(strEnd))
@@ -45,6 +80,8 @@ public class WordConstructionScript : MonoBehaviour
 
         return "";
     }
+    
+    // API Call for Dictionary Definition
     async void call()
     {
         string url = "https://api.dictionaryapi.dev/api/v2/entries/en/" + constructedWord.text;
@@ -63,6 +100,8 @@ public class WordConstructionScript : MonoBehaviour
             definition.text = "";
         }
     }
+    
+    // API Call for Image
     async void callimg() 
     {
 
@@ -84,10 +123,11 @@ public class WordConstructionScript : MonoBehaviour
         }
     }
 
+    // Taking the result of the API call made in callimg() and processing it into the actual picture
     IEnumerator createImage(string tempurl)
     {
-         Debug.Log("testing);");
-         var imagetemp = image.GetComponent<Image>();
+        Debug.Log("testing);");
+        var imagetemp = image.GetComponent<Image>();
         UnityWebRequest request = UnityWebRequestTexture.GetTexture(tempurl);
         Debug.Log("image gotten");
         yield return request.SendWebRequest();
@@ -105,13 +145,53 @@ public class WordConstructionScript : MonoBehaviour
         Debug.Log("sprite set");
     }
     
+    // Ardity Required Method to Automatically Read Serial Messages
+    // Invoked when a line of data is received from the serial device.
+    void OnMessageArrived(string msg)
+    {
+        // Ensuring the data transfers!
+        Debug.Log("Arrived: " + msg);
+
+        // Process the string
+        receivedRFIDs = msg.Split(',');
+        foreach (string RFID in receivedRFIDs)
+        {
+            Debug.Log("RFID: " + RFID);
+            if (RFID.Trim() == "EMPTY")
+            {
+                // Print the debug info and assign the variables in case of early exit
+                input.text = wordFromRFID;
+                Debug.Log("wordFromRFID is " + wordFromRFID + " and input.text is " + input.text);
+                wordFromRFID = "";
+                return;
+            }
+            else
+            {
+                wordFromRFID += RFIDToLetters[RFID.Trim()];
+            }
+        }
+
+        // Print the debug info and assign the variables in case of max-letter-length word
+        input.text = wordFromRFID;
+        Debug.Log("wordFromRFID is " + wordFromRFID + " and input.text is " + input.text);
+        wordFromRFID = "";
+    }
+
+
+    // Ardity Required Method to Connect and Disconnect
+    // Invoked when a connect/disconnect event occurs. The parameter 'success' will be 'true' upon connection
+    // The parameter 'success' will be 'false' upon disconnection or failure to connect.
+    void OnConnectionEvent(bool success)
+    {
+        Debug.Log(success ? "Device connected" : "Device disconnected");
+    }
 
     // Update is called once per frame
     void Update()
     {
         
-        if(Input.anyKey)
-        {
+        //if(Input.anyKey)
+        //{
             constructedWord.text = input.text;
             if (constructedWord.text != previous)
             {
@@ -123,7 +203,7 @@ public class WordConstructionScript : MonoBehaviour
             welcomeTitle.SetActive(false);
             welcomeSubtitle.SetActive(false);
             Debug.Log("definition" + previous);
-        }
+        //}
 
 
         if (constructedWord.text == "")
