@@ -48,34 +48,46 @@ public class WordConstructionScript : MonoBehaviour
         //gameObject.GetComponent<CanvasRenderer>().cull = false;
 
         // Adding all unique RFID address to the dictionary, and mapping them to their corresponding letter
-        // Kind of have to hard-code this since each ID is unique and ties to a real-world/tangible input
+        // Have to hard-code this since each ID is unique and ties to a real-world/tangible input
         RFIDToLetters.Add("53b6e744010001", "A");
+        RFIDToLetters.Add("5363e744010001", "A");
         RFIDToLetters.Add("53ace744010001", "B");
         RFIDToLetters.Add("53abe744010001", "C");
+        RFIDToLetters.Add("537ee744010001", "C");
         RFIDToLetters.Add("53ade744010001", "D");
         RFIDToLetters.Add("53aee744010001", "E");
+        RFIDToLetters.Add("536ee744010001", "E");
         RFIDToLetters.Add("53a3e744010001", "F");
         RFIDToLetters.Add("53a4e744010001", "G");
         RFIDToLetters.Add("53a5e744010001", "H");
         RFIDToLetters.Add("53a6e744010001", "I");
+        RFIDToLetters.Add("5374e744010001", "I");
         RFIDToLetters.Add("539be744010001", "J");
         RFIDToLetters.Add("539ce744010001", "K");
         RFIDToLetters.Add("539de744010001", "L");
+        RFIDToLetters.Add("5376e744010001", "L");
         RFIDToLetters.Add("539ee744010001", "M");
         RFIDToLetters.Add("533a5846010001", "N");
+        RFIDToLetters.Add("5375e744010001", "N");
         RFIDToLetters.Add("5393e744010001", "O");
+        RFIDToLetters.Add("5373e744010001", "O");
         RFIDToLetters.Add("5394e744010001", "P");
         RFIDToLetters.Add("5395e744010001", "Q");
         RFIDToLetters.Add("538ee744010001", "R");
+        RFIDToLetters.Add("536de744010001", "R");
         RFIDToLetters.Add("538de744010001", "S");
+        RFIDToLetters.Add("536ce744010001", "S");
         RFIDToLetters.Add("538ce744010001", "T");
+        RFIDToLetters.Add("536be744010001", "T");
         RFIDToLetters.Add("538be744010001", "U");
         RFIDToLetters.Add("537be744010001", "V");
         RFIDToLetters.Add("5386e744010001", "W");
         RFIDToLetters.Add("5385e744010001", "X");
         RFIDToLetters.Add("5384e744010001", "Y");
+        RFIDToLetters.Add("537de744010001", "Y");
         RFIDToLetters.Add("5383e744010001", "Z");
 
+        // Whitelist for words to produce an image for
         imageWords.Add("cat");
         imageWords.Add("dog");
         imageWords.Add("fish");
@@ -96,13 +108,17 @@ public class WordConstructionScript : MonoBehaviour
         imageWords.Add("horse");
         imageWords.Add("deer");
         imageWords.Add("crow");
+        imageWords.Add("bird");
+        imageWords.Add("water");
 
+        // Blacklist of words to show nothing for
         badWords.Add("fuck");
         badWords.Add("shit");
         badWords.Add("ass");
         badWords.Add("cunt");
         badWords.Add("hell");
         badWords.Add("bitch");
+        badWords.Add("bitc");
         badWords.Add("whore");
         badWords.Add("slut");
         badWords.Add("penis");
@@ -258,7 +274,7 @@ public class WordConstructionScript : MonoBehaviour
         foreach (string RFID in receivedRFIDs)
         {
             Debug.Log("RFID: " + RFID);
-            if (RFID.Trim() == "EMPTY")
+            if (RFID.Trim() == "EMPTY" || RFID.Trim() == "")
             {
                 // Print the debug info and assign the variables in case of early exit
                 input.text = wordFromRFID;
@@ -276,6 +292,7 @@ public class WordConstructionScript : MonoBehaviour
         input.text = wordFromRFID;
         Debug.Log("wordFromRFID is " + wordFromRFID + " and input.text is " + input.text);
         wordFromRFID = "";
+        return;
     }
 
 
@@ -327,20 +344,22 @@ public class WordConstructionScript : MonoBehaviour
             if (constructedWord.text != previous)
             {
                 previous = constructedWord.text;
-                if (imageWords.Contains(constructedWord.text))
+                if (imageWords.Contains(constructedWord.text.ToLower()))
                 {
                     definition.enabled = true;
-                    definition.transform.position = new Vector3(-185, 830);
+                    definition.transform.position = new Vector3(-300, 900);
+                    definition.alignment = TextAlignmentOptions.Left;
                     image.SetActive(true);
                     imageBg.SetActive(true);
                     call();
                     callimg();
                     cam.backgroundColor = new Color(.0f,.522f,.263f);
                 }
-                else if (!badWords.Contains(constructedWord.text))
+                else if (!badWords.Contains(constructedWord.text.ToLower()))
                 {
                     definition.enabled = true;
                     definition.transform.position = new Vector3(0, 830);
+                    definition.alignment = TextAlignmentOptions.Center; 
                     image.SetActive(false);
                     imageBg.SetActive(false);
                     call();
@@ -351,7 +370,7 @@ public class WordConstructionScript : MonoBehaviour
                     definition.enabled = false;
                     image.SetActive(false);
                     imageBg.SetActive(false);
-            cam.backgroundColor = new Color(.114f,.133f,.325f);
+                    cam.backgroundColor = new Color(.114f,.133f,.325f);
                 }
             }
             welcomeTitle.SetActive(false);
