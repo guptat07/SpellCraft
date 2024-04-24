@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,9 +17,17 @@ public class WordConstructionScript : MonoBehaviour
     public GameObject welcomeSubtitle;
     public TextMeshProUGUI definition;
     public GameObject image;
+
+    public GameObject imageBg;
+
+    public Camera cam;
     public Dictionary<string, string> RFIDToLetters = new Dictionary<string, string>();
     public string[] receivedRFIDs;
     public string wordFromRFID = "";
+
+    public List<string> imageWords;
+
+    public List<string> badWords;
 
     // These are for networking/internet API calling.
     private static readonly HttpClient client = new HttpClient();
@@ -31,6 +40,7 @@ public class WordConstructionScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        cam.backgroundColor = new Color(.145f,.157f,.572f);
         definition.text = "";
         input.text = "";
         // Activating the InputField so that user doesn't have to click on it
@@ -65,6 +75,95 @@ public class WordConstructionScript : MonoBehaviour
         RFIDToLetters.Add("5385e744010001", "X");
         RFIDToLetters.Add("5384e744010001", "Y");
         RFIDToLetters.Add("5383e744010001", "Z");
+
+        imageWords.Add("cat");
+        imageWords.Add("dog");
+        imageWords.Add("fish");
+        imageWords.Add("sheep");
+        imageWords.Add("lamb");
+        imageWords.Add("pig");
+        imageWords.Add("cow");
+        imageWords.Add("hen");
+        imageWords.Add("whale");
+        imageWords.Add("shark");
+        imageWords.Add("zebra");
+        imageWords.Add("mouse");
+        imageWords.Add("rat");
+        imageWords.Add("duck");
+        imageWords.Add("goose");
+        imageWords.Add("eagle");
+        imageWords.Add("snail");
+        imageWords.Add("horse");
+        imageWords.Add("deer");
+
+        badWords.Add("fuck");
+        badWords.Add("shit");
+        badWords.Add("ass");
+        badWords.Add("cunt");
+        badWords.Add("hell");
+        badWords.Add("bitch");
+        badWords.Add("whore");
+        badWords.Add("slut");
+        badWords.Add("penis");
+        badWords.Add("crap");
+        badWords.Add("damn");
+        badWords.Add("dick");
+        badWords.Add("cock");
+        badWords.Add("nig");
+        badWords.Add("coon");
+        badWords.Add("jap");
+        badWords.Add("gook");
+        badWords.Add("heck");
+        badWords.Add("c");
+        badWords.Add("ca");
+        badWords.Add("fu");
+        badWords.Add("fuc");
+        badWords.Add("d");
+        badWords.Add("do");
+        badWords.Add("f");
+        badWords.Add("fi");
+        badWords.Add("fis");
+        badWords.Add("s");
+        badWords.Add("sh");
+        badWords.Add("she");
+        badWords.Add("shee");
+        badWords.Add("l");
+        badWords.Add("la");
+        badWords.Add("lam");
+        badWords.Add("p");
+        badWords.Add("co");
+        badWords.Add("h");
+        badWords.Add("he");
+        badWords.Add("w");
+        badWords.Add("wh");
+        badWords.Add("wha");
+        badWords.Add("whal");
+        badWords.Add("sha");
+        badWords.Add("shar");
+        badWords.Add("z");
+        badWords.Add("ze");
+        badWords.Add("zeb");
+        badWords.Add("m");
+        badWords.Add("mo");
+        badWords.Add("mou");
+        badWords.Add("r");
+        badWords.Add("ra");
+        badWords.Add("du");
+        badWords.Add("duc");
+        badWords.Add("g");
+        badWords.Add("e");
+        badWords.Add("ea");
+        badWords.Add("eag");
+        badWords.Add("eagl");
+        badWords.Add("sn");
+        badWords.Add("sna");
+        badWords.Add("snai");
+        badWords.Add("ho");
+        badWords.Add("hor");
+        badWords.Add("hors");
+        badWords.Add("de");
+        badWords.Add("dee");
+
     }
     
     // Method to process return from API Calls (getting data from JSON)
@@ -192,24 +291,68 @@ public class WordConstructionScript : MonoBehaviour
         
         //if(Input.anyKey)
         //{
-            constructedWord.text = input.text;
-            if (constructedWord.text != previous)
-            {
-                previous = constructedWord.text;
-                call();
-                callimg();
+        //     constructedWord.text = input.text;
+        //     if (constructedWord.text != previous)
+        //     {
+        //         previous = constructedWord.text;
+        //         call();
+        //         callimg();
 
-            }
-            welcomeTitle.SetActive(false);
-            welcomeSubtitle.SetActive(false);
-            // Debug.Log("definition" + previous);
-        //}
+        //     }
+        //     welcomeTitle.SetActive(false);
+        //     welcomeSubtitle.SetActive(false);
+        //     // Debug.Log("definition" + previous);
+        // //}
 
 
+        // if (constructedWord.text == "")
+        // {
+        //     welcomeTitle.SetActive(true);
+        //     welcomeSubtitle.SetActive(true);
+        // }
+        constructedWord.text = input.text;
         if (constructedWord.text == "")
         {
             welcomeTitle.SetActive(true);
             welcomeSubtitle.SetActive(true);
+            image.SetActive(false);
+            imageBg.SetActive(false);
+            definition.enabled = false;
+        } else
+        {
+
+            if (constructedWord.text != previous)
+            {
+                previous = constructedWord.text;
+                if (imageWords.Contains(constructedWord.text))
+                {
+                    definition.enabled = true;
+                    definition.transform.position = new Vector3(-115, 490);
+                    image.SetActive(true);
+                    imageBg.SetActive(true);
+                    call();
+                    callimg();
+                    cam.backgroundColor = new Color(.0f,.522f,.263f);
+                }
+                else if (!badWords.Contains(constructedWord.text))
+                {
+                    definition.enabled = true;
+                    definition.transform.position = new Vector3(0, 490);
+                    image.SetActive(false);
+                    imageBg.SetActive(false);
+                    call();
+                    cam.backgroundColor = new Color(.0f,.522f,.263f);
+                }
+                else
+                {
+                    definition.enabled = false;
+                    image.SetActive(false);
+                    imageBg.SetActive(false);
+                    cam.backgroundColor = new Color(.145f,.157f,.572f);
+                }
+            }
+            welcomeTitle.SetActive(false);
+            welcomeSubtitle.SetActive(false);
         }
 
     }
