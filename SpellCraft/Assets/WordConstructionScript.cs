@@ -95,6 +95,7 @@ public class WordConstructionScript : MonoBehaviour
         imageWords.Add("snail");
         imageWords.Add("horse");
         imageWords.Add("deer");
+        imageWords.Add("crow");
 
         badWords.Add("fuck");
         badWords.Add("shit");
@@ -163,6 +164,7 @@ public class WordConstructionScript : MonoBehaviour
         badWords.Add("hors");
         badWords.Add("de");
         badWords.Add("dee");
+        badWords.Add("cro");
 
     }
     
@@ -328,7 +330,7 @@ public class WordConstructionScript : MonoBehaviour
                 if (imageWords.Contains(constructedWord.text))
                 {
                     definition.enabled = true;
-                    definition.transform.position = new Vector3(-115, 490);
+                    definition.transform.position = new Vector3(-185, 830);
                     image.SetActive(true);
                     imageBg.SetActive(true);
                     call();
@@ -338,7 +340,7 @@ public class WordConstructionScript : MonoBehaviour
                 else if (!badWords.Contains(constructedWord.text))
                 {
                     definition.enabled = true;
-                    definition.transform.position = new Vector3(0, 490);
+                    definition.transform.position = new Vector3(0, 830);
                     image.SetActive(false);
                     imageBg.SetActive(false);
                     call();
