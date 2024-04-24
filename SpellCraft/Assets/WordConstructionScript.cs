@@ -318,6 +318,7 @@ public class WordConstructionScript : MonoBehaviour
             image.SetActive(false);
             imageBg.SetActive(false);
             definition.enabled = false;
+            cam.backgroundColor = new Color(.114f,.133f,.325f);
         } else
         {
 
@@ -348,7 +349,7 @@ public class WordConstructionScript : MonoBehaviour
                     definition.enabled = false;
                     image.SetActive(false);
                     imageBg.SetActive(false);
-                    cam.backgroundColor = new Color(.145f,.157f,.572f);
+            cam.backgroundColor = new Color(.114f,.133f,.325f);
                 }
             }
             welcomeTitle.SetActive(false);
